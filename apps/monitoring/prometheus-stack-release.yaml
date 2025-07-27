@@ -22,18 +22,16 @@ spec:
         passwordKey: admin-password
       ingress:
         enabled: true
-        annotations:
-          nginx.ingress.kubernetes.io/rewrite-target: /$2
-        path: /grafana(/|$)(.*)
-        pathType: Prefix
+        ingressClassName: traefik
         hosts:
-          - tmdev.pl
+          - grafana.tmdev.pl
+        paths:
+          - /
         servicePort: 80
       service:
         type: ClusterIP
       persistence:
         enabled: true
-        type: pvc
         accessModes:
           - ReadWriteOnce
         size: 5Gi
