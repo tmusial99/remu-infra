@@ -4,4 +4,4 @@ resources:
   - namespace.yaml
   - grafana-sealedsecret.yaml
   - helm-repos.yaml
-  - grafana-helmrelease.yaml
+  - prometheus-stack-release.yaml
