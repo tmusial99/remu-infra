@@ -32,7 +32,7 @@ spec:
           - /
         servicePort: 80
         tls:
-          - secretName: grafana-tmdev-cert
+          - secretName: grafana-tmdev-tls
             hosts:
               - grafana.tmdev.pl
       service:
