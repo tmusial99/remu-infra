@@ -1,14 +1,4 @@
-apiVersion: kustomize.toolkit.fluxcd.io/v1
+apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-metadata:
-  name: issuer
-  namespace: flux-system
-spec:
-  dependsOn:
-    - name: cert-manager
-  interval: 5m
-  path: "./apps/cert-manager/issuer"
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
+resources:
+- cloudflare-issuer.yaml

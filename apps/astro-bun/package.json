@@ -1,0 +1,16 @@
+{
+  "name": "astro-bun",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev:tmdev": "SITE=tmdev astro dev --host",
+    "build:tmdev": "SITE=tmdev astro build",
+    "dev:novi-tech": "SITE=novi-tech astro dev --host",
+    "build:novi-tech": "SITE=novi-tech astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^5.12.8"
+  }
+}
