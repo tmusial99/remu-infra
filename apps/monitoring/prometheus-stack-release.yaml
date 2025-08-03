@@ -31,6 +31,10 @@ spec:
         paths:
           - /
         servicePort: 80
+        tls:
+          - secretName: grafana-tmdev-cert
+            hosts:
+              - grafana.tmdev.pl
       service:
         type: ClusterIP
       persistence:
