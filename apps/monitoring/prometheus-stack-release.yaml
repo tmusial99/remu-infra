@@ -17,7 +17,8 @@ spec:
     grafana:
       enabled: true
       replicas: 1
-      initChownData: false
+      initChownData:
+        enabled: false
       admin:
         existingSecret: grafana-admin-secret
         userKey: admin-user
