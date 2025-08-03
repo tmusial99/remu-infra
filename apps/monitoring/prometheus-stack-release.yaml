@@ -25,7 +25,7 @@ spec:
         passwordKey: admin-password
       ingress:
         enabled: true
-        ingressClassName: traefik
+        ingressClassName: haproxy
         hosts:
           - grafana.tmdev.pl
         paths:
