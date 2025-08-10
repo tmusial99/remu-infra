@@ -5,7 +5,7 @@
   "scripts": {
     "dev:tmdev": "SITE=tmdev astro dev --host",
     "dev:novi-tech": "SITE=novi-tech astro dev --host",
-    "build": "./build-all.sh"
+    "build": "pwd && ls -la && ./build-all.sh"
   },
   "dependencies": {
     "astro": "^5.12.8"
