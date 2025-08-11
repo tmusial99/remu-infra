@@ -6,7 +6,6 @@ COPY frontend/package.json frontend/bun.lock ./
 RUN bun install
 
 COPY frontend/ .
-RUN chmod +x build-all.sh
 RUN bun run build
 
 # --- Backend builder ---
