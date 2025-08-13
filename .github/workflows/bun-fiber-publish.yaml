@@ -44,4 +44,5 @@ jobs:
           account: ${{ github.repository_owner }}
           token: ${{ secrets.GITHUB_TOKEN }}
           image-names: "bun-fiber"
+          cut-off: 2h
           keep-n-most-recent: 5
