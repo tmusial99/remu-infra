@@ -1,7 +1,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: haproxy-ingress
+  name: bun-fiber
   namespace: flux-system
 spec:
   interval: 5m
