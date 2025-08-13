@@ -8,6 +8,8 @@ spec:
   path: ./apps/monitoring
   prune: true
   dependsOn:
+    - name: namespaces
+    - name: sealedsecrets
     - name: haproxy-ingress
   sourceRef:
     kind: GitRepository

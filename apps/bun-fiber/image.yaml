@@ -1,0 +1,47 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: bun-fiber
+  namespace: flux-system
+spec:
+  image: ghcr.io/tmusial99/bun-fiber
+  interval: 2m
+  secretRef:
+    name: ghcr-creds
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: bun-fiber
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: bun-fiber
+  policy:
+    alphabetical:
+      order: asc
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageUpdateAutomation
+metadata:
+  name: bun-fiber
+  namespace: flux-system
+spec:
+  interval: 2m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  git:
+    checkout:
+      ref:
+        branch: master
+    commit:
+      author:
+        email: fluxcdbot@users.noreply.github.com
+        name: fluxcdbot
+      messageTemplate: 'chore: update bun-fiber image to {{ .ImageRef }}'
+    push:
+      branch: master
+  update:
+    strategy: Setters
+    path: ./apps/bun-fiber

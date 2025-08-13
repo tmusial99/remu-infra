@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bun-fiber
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: bun-fiber
+  template:
+    metadata:
+      labels:
+        app: bun-fiber
+    spec:
+      containers:
+        - name: bun-fiber
+          image: ghcr.io/tmusial99/bun-fiber:latest # {"$imagepolicy": "flux-system:bun-fiber"}
+          ports:
+            - containerPort: 3000
+              name: http
+            - containerPort: 3001
+              name: metrics
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bun-fiber
+  namespace: default
+spec:
+  selector:
+    app: bun-fiber
+  ports:
+    - name: http
+      port: 3000
+      targetPort: 3000
+    - name: metrics
+      port: 3001
+      targetPort: 3001
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bun-fiber
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: haproxy
+spec:
+  tls:
+    - hosts:
+        - tmdev.pl
+      secretName: tmdev-tls
+  rules:
+    - host: tmdev.pl
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: bun-fiber
+                port:
+                  name: http
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: bun-fiber
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  selector:
+    matchLabels:
+      app: bun-fiber
+  namespaceSelector:
+    matchNames:
+      - default
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: 30s

@@ -14,7 +14,9 @@ func main() {
 
 	// Logging middleware
 	app.Use(logger.New())
+	app.Use(metricsMiddleware())
 	app.Use(staticFilesMiddleware(config))
+	go runMetricsServer()
 
 	// API group
 	api := app.Group("/api", apiAuthMiddleware(config))
