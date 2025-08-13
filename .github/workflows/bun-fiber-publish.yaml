@@ -30,7 +30,7 @@ jobs:
       - name: Build and push image with timestamp tag
         run: |
           echo "Tagging image with: $TIMESTAMP"
-          docker build -f apps/bun-fiber/Dockerfile -t ghcr.io/${{ github.repository_owner }}/bun-fiber:$TIMESTAMP .
+          docker build -f apps/bun-fiber/Dockerfile -t ghcr.io/${{ github.repository_owner }}/bun-fiber:$TIMESTAMP apps/bun-fiber
           docker push ghcr.io/${{ github.repository_owner }}/bun-fiber:$TIMESTAMP
 
   cleanup:
