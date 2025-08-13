@@ -8,6 +8,7 @@ on:
       - 'apps/bun-fiber/backend/**'
       - 'apps/bun-fiber/frontend/**'
       - 'apps/bun-fiber/Dockerfile'
+      - '.github/workflows/bun-fiber-publish.yaml'
 
 jobs:
   build:
