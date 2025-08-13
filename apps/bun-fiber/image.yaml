@@ -39,7 +39,6 @@ spec:
       author:
         email: fluxcdbot@users.noreply.github.com
         name: fluxcdbot
-      messageTemplate: 'chore: update bun-fiber image to {{ .ImageRef }}'
     push:
       branch: master
   update:
