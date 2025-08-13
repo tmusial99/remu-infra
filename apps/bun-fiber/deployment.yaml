@@ -34,6 +34,8 @@ kind: Service
 metadata:
   name: bun-fiber
   namespace: default
+  labels:
+    app: bun-fiber
 spec:
   selector:
     app: bun-fiber
