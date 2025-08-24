@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: bun-fiber
-          image: ghcr.io/tmusial99/bun-fiber:20250824-131958 # {"$imagepolicy": "flux-system:bun-fiber"}
+          image: ghcr.io/tmusial99/bun-fiber:20250824-144904 # {"$imagepolicy": "flux-system:bun-fiber"}
           ports:
             - containerPort: 3000
               name: http
