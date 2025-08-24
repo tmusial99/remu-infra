@@ -1,22 +1,66 @@
+---
+import favicon from '../assets/favicon.svg';
+import Nav from '../components/Nav.astro';
+---
+
 <!doctype html>
-<html lang="en">
+<html lang="pl">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="icon" type="image/svg+xml" href={favicon.src} />
+		<meta name="author" content="Novi-Tech" />
+		<meta
+			name="description"
+			content="Kompleksowe instalacje elektryczne, monitoring, alarmy i sieci w Komornikach i okolicach Poznania. Gwarancja jakości i wieloletnie doświadczenie."
+		/>
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<title>Novi-Tech | Instalacje elektryczne, monitoring, alarmy i sieci w Poznaniu</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet" />
+		<link href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@700&display=swap" rel="stylesheet" />
 	</head>
 	<body>
-		<slot />
+		<header>
+			<Nav />
+		</header>
+		<main>
+			<slot />
+		</main>
 	</body>
 </html>
 
-<style>
-	html,
-	body {
+<style is:global>
+	:root {
+		--logo-theme-color-light: rgb(1, 1, 179);
+		--logo-theme-color: var(--logo-theme-color-light);
+
+		--theme-color: rgb(217, 236, 252);
+	}
+
+	* {
 		margin: 0;
-		width: 100%;
-		height: 100%;
+		padding: 0;
+		box-sizing: border-box;
+		font-family: 'Open Sans', sans-serif;
+	}
+
+	html {
+		font-size: 16px;
+		line-height: 1.5;
+	}
+
+	body {
+		font-optical-sizing: auto;
+		font-weight: 400;
+		font-style: normal;
+		font-variation-settings: 'wdth' 100;
+	}
+
+	.container {
+		max-width: 1200px;
+		margin-inline: auto;
+		padding-inline: 16px;
 	}
 </style>

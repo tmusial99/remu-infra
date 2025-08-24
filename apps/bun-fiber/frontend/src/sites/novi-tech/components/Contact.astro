@@ -1,0 +1,134 @@
+---
+import envelopeIcon from '../assets/envelope.svg?raw';
+import phoneIcon from '../assets/phone.svg?raw';
+---
+
+<section id="contact" class="container">
+	<h2>Skontaktuj się z nami!</h2>
+	<div class="grid">
+		<iframe
+			src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2437.616485914855!2d16.80751097753063!3d52.34110324945796!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47044f98d49f31eb%3A0xbeccc47626dac87e!2sNovi-Tech%20Robert%20Nowicki!5e0!3m2!1spl!2spl!4v1755961412552!5m2!1spl!2spl"
+			width="800"
+			height="600"
+			style="border:0;"
+			allowfullscreen=""
+			loading="lazy"
+			referrerpolicy="no-referrer-when-downgrade"></iframe>
+		<div class="contact-details">
+			<h3><Fragment set:html={envelopeIcon} />Adres e-mail</h3>
+			<a href="mailto:kontakt@novi-tech.net">kontakt@novi-tech.net</a>
+		</div>
+		<div class="contact-details">
+			<h3><Fragment set:html={phoneIcon} />Numer telefonu</h3>
+			<a href="tel:+48537130778">537 130 778</a>
+		</div>
+	</div>
+</section>
+
+<style>
+	section {
+		margin-top: 32px;
+	}
+	h2 {
+		text-align: center;
+		margin-bottom: 12px;
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: 2fr 1fr;
+		grid-template-rows: auto auto;
+		gap: 21px;
+		min-height: 350px;
+		justify-items: flex-start;
+	}
+
+	.grid > iframe {
+		grid-column: 1 / 2;
+		grid-row: 1 / 3;
+		width: 100%;
+		height: 100%;
+	}
+
+	.grid > .contact-details:nth-of-type(1) {
+		grid-column: 2 / 3;
+		grid-row: 1 / 2;
+	}
+
+	.grid > .contact-details:nth-of-type(2) {
+		grid-column: 2 / 3;
+		grid-row: 2 / 3;
+	}
+
+	.contact-details {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: flex-start;
+		text-align: center;
+		width: max-content;
+		gap: 21px;
+
+		a {
+			margin-left: 8px;
+			text-decoration: underline dotted currentColor;
+			color: inherit;
+		}
+	}
+
+	h3 {
+		text-align: inherit;
+		display: flex;
+		align-items: center;
+		gap: 6px;
+
+		svg {
+			height: 40px;
+			width: 40px;
+			fill: var(--logo-theme-color);
+		}
+	}
+
+	@media (max-width: 640px) {
+		.grid {
+			grid-template-columns: 1fr 1fr;
+			justify-items: center;
+		}
+
+		.grid > iframe {
+			grid-column: 1 / 3;
+			grid-row: 1 / 2;
+		}
+
+		.grid > .contact-details:nth-of-type(1) {
+			grid-column: auto;
+			grid-row: auto;
+		}
+
+		.grid > .contact-details:nth-of-type(2) {
+			grid-column: auto;
+			grid-row: auto;
+		}
+
+		.contact-details {
+			align-items: center;
+			gap: 21px;
+
+			a {
+				margin-left: 0px;
+			}
+		}
+	}
+
+	@media (max-width: 450px) {
+		.grid {
+			grid-template-columns: 1fr;
+			grid-template-rows: 5fr 1fr 1fr;
+		}
+
+		.grid > * {
+			grid-column: 1 !important;
+			grid-row: auto;
+		}
+	}
+</style>

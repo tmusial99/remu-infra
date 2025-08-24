@@ -1,0 +1,126 @@
+---
+interface Props {
+	logos: string[];
+	height?: number;
+	gap?: number;
+	speedMs?: number;
+	title?: string;
+}
+
+const { logos, height = 48, gap = 50, speedMs = 55000, title = 'Zaufali nam' } = Astro.props;
+
+const SPEED = Math.max(5000, speedMs);
+---
+
+<section class="logo-slider container" style={`--h:${height}px; --gap:${gap}px; --speed:${SPEED}ms`}>
+	<h2>{title}</h2>
+	<div class="scroller" aria-hidden="false">
+		<!-- track 1 -->
+		<ul class="track">
+			{
+				logos.map((svg, i) => (
+					<li class="logo" aria-hidden="true">
+						<div class="svg" set:html={svg} />
+					</li>
+				))
+			}
+		</ul>
+		<!-- track 2 - seamless loop -->
+		<ul class="track" aria-hidden="true">
+			{
+				logos.map((svg, i) => (
+					<li class="logo" aria-hidden="true">
+						<div class="svg" set:html={svg} />
+					</li>
+				))
+			}
+		</ul>
+	</div>
+</section>
+
+<style>
+	h2 {
+		text-align: center;
+		margin-bottom: 12px;
+	}
+
+	.logo-slider {
+		margin-top: 32px;
+		position: relative;
+		width: 100%;
+		overflow: hidden;
+		-webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+		mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+	}
+
+	.scroller {
+		display: flex;
+		align-items: center;
+		gap: var(--gap);
+		width: max-content;
+		animation: scroll var(--speed) linear infinite;
+		will-change: transform;
+		backface-visibility: hidden;
+		transform: translate3d(0, 0, 0);
+	}
+
+	.track {
+		flex: none;
+		display: flex;
+		align-items: center;
+		gap: var(--gap);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	@keyframes scroll {
+		to {
+			transform: translateX(calc(-50% - var(--gap) / 2));
+		}
+	}
+
+	.logo-slider:hover .scroller,
+	.logo-slider:focus-within .scroller {
+		animation-play-state: paused;
+	}
+
+	.logo {
+		flex: 0 0 auto;
+		display: grid;
+		place-items: center;
+	}
+
+	.svg {
+		display: block;
+		height: var(--h);
+		width: auto;
+
+		svg {
+			height: 100%;
+			width: 100%;
+		}
+	}
+
+	.svg :where(svg) {
+		display: block;
+		height: var(--h);
+		width: auto;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.scroller {
+			animation: none;
+		}
+		.logo-slider {
+			overflow-x: auto;
+			-webkit-overflow-scrolling: touch;
+			scroll-snap-type: x mandatory;
+		}
+		.track {
+		}
+		.logo {
+			scroll-snap-align: start;
+		}
+	}
+</style>

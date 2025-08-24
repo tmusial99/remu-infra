@@ -1,0 +1,92 @@
+---
+import { Picture } from 'astro:assets';
+import photo1 from '../assets/photos/1.jpg';
+import photo2 from '../assets/photos/2.jpg';
+import photo3 from '../assets/photos/3.jpg';
+---
+
+<section>
+	<h2>Nasze realizacje</h2>
+	<div class="gallery container">
+		<Picture
+			src={photo1}
+			formats={['avif', 'webp', 'jpeg']}
+			widths={[480, 640, 768, 868]}
+			sizes="(max-width: 580px) calc(100vw - 32px), 868px"
+			alt="Zamontowana szafa rack z urządzeniami sieciowymi i rejestratorem monitoringu"
+			loading="lazy"
+			decoding="async"
+		/>
+
+		<Picture
+			src={photo2}
+			formats={['avif', 'webp', 'jpeg']}
+			widths={[320, 400, 428]}
+			sizes="(max-width: 580px) calc(100vw - 32px), 428px"
+			alt="Kamera monitoringu zamontowana na ścianie budynku jednorodzinneg na tle błękitnego nieba"
+			loading="lazy"
+			decoding="async"
+		/>
+
+		<Picture
+			src={photo3}
+			formats={['avif', 'webp', 'jpeg']}
+			widths={[320, 400, 428]}
+			sizes="(max-width: 580px) calc(100vw - 32px), 428px"
+			alt="Dwie kamery monitoringu zamontowane na narożniku budynku jednorodzinnego"
+			loading="lazy"
+			decoding="async"
+		/>
+	</div>
+</section>
+
+<style>
+	section {
+		margin-top: 32px;
+	}
+	h2 {
+		text-align: center;
+		margin-bottom: 12px;
+	}
+	.gallery {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 12px;
+		max-width: 900px;
+	}
+
+	@media (max-width: 580px) {
+		.gallery {
+			grid-template-columns: repeat(1, 1fr);
+		}
+	}
+
+	.gallery > * {
+		grid-column: auto;
+	}
+	.gallery > :first-child {
+		grid-column: 1 / -1;
+	}
+
+	picture {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+
+	img {
+		border-radius: 24px;
+		box-shadow: 6px 2px 8px 0px rgb(0 0 0 / 30%);
+		display: block;
+		max-width: 100%;
+		height: auto;
+		object-fit: cover;
+	}
+
+	.gallery > :first-child img {
+		aspect-ratio: 16 / 9;
+	}
+	.gallery > :not(:first-child) img {
+		aspect-ratio: 9 / 16;
+	}
+</style>

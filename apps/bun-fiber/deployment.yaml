@@ -59,8 +59,21 @@ spec:
     - hosts:
         - tmdev.pl
       secretName: tmdev-tls
+    - hosts:
+        - novi-tech.net
+      secretName: novi-tech-tls
   rules:
     - host: tmdev.pl
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: bun-fiber
+                port:
+                  name: http
+    - host: novi-tech.net
       http:
         paths:
           - path: /

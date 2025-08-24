@@ -1,0 +1,52 @@
+---
+import opticFiberIcon from '../assets/optic-fiber.svg?raw';
+import sirenIcon from '../assets/siren.svg?raw';
+import televisionIcon from '../assets/television.svg?raw';
+import Card from './Card.astro';
+---
+
+<div class="container">
+	<Card
+		icon={opticFiberIcon}
+		heading="Sieci teleinformatyczne i światłowodowe"
+		text="Projektujemy i montujemy sieci LAN, Wi-Fi i światłowody. Od spawania i pomiarów po konfigurację urządzeń - szybkie i stabilne połączenie w domu i firmie."
+		color="var(--logo-theme-color)"
+	/>
+	<Card
+		icon={sirenIcon}
+		heading="Systemy alarmowe i monitoringu wizyjnego"
+		text="Montujemy i konfigurujemy alarmy oraz kamery CCTV/IP. Zapewniamy ochronę domu i firmy, zdalny podgląd i szybkie powiadomienia o zdarzeniach."
+		color="var(--logo-theme-color)"
+	/>
+	<Card
+		icon={televisionIcon}
+		heading="Domofony / Antenty SAT i DVB-T"
+		text="Instalujemy domofony i wideodomofony oraz ustawiamy anteny satelitarne i naziemne - wygodna komunikacja i niezawodny sygnał TV."
+		color="var(--logo-theme-color)"
+	/>
+</div>
+
+<style>
+	.container {
+		margin-top: 21px;
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		grid-template-rows: auto auto;
+		gap: 8px;
+	}
+
+	@media (max-width: 920px) {
+		.container {
+			grid-template-columns: repeat(2, 1fr);
+		}
+		:global(.container > :last-child:nth-child(odd)) {
+			grid-column: 1 / -1;
+		}
+	}
+
+	@media (max-width: 640px) {
+		.container {
+			grid-template-columns: repeat(1, 1fr);
+		}
+	}
+</style>

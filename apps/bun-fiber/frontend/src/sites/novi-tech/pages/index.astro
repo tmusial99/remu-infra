@@ -1,18 +1,33 @@
 ---
+import asusLogo from '../assets/partner-logo/asus.svg?raw';
+import ciscoLogo from '../assets/partner-logo/cisco.svg?raw';
+import dahuaLogo from '../assets/partner-logo/dahua.svg?raw';
+import hikvisionLogo from '../assets/partner-logo/hikvision.svg?raw';
+import netgearLogo from '../assets/partner-logo/netgear.svg?raw';
+import satelLogo from '../assets/partner-logo/satel.svg?raw';
+import tiandyLogo from '../assets/partner-logo/tiandy.svg?raw';
+import tplinkLogo from '../assets/partner-logo/tplink.svg?raw';
+import CardsDisplay from '../components/CardsDisplay.astro';
+import Contact from '../components/Contact.astro';
+import HeroBanner from '../components/HeroBanner.astro';
+import Photos from '../components/Photos.astro';
+import Reviews from '../components/Reviews.astro';
+import SellingPoints from '../components/SellingPoints.astro';
+import TrustedLogos from '../components/TrustedLogos.astro';
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
 <Layout>
-	<p>siema</p>
-	<h1>HEJKA TUTAJ NOVI-TECH</h1>
+	<HeroBanner />
+	<SellingPoints />
+	<CardsDisplay />
+	<TrustedLogos
+		logos={[asusLogo, ciscoLogo, dahuaLogo, hikvisionLogo, netgearLogo, satelLogo, tiandyLogo, tplinkLogo]}
+		title="Współpracujemy z najlepszymi"
+	/>
+	<Photos />
+	<Contact />
+	<Reviews />
 </Layout>
 
-<style>
-	p {
-		height: 100px;
-		color: green;
-	}
-</style>
+<style></style>

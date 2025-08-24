@@ -1,0 +1,44 @@
+---
+import buildingsIcon from '../assets/buildings.svg?raw';
+import calendarCheckIcon from '../assets/calendar-check.svg?raw';
+import chatsCircleIcon from '../assets/chats-circle.svg?raw';
+import gearIcon from '../assets/gear.svg?raw';
+import globeIcon from '../assets/globe.svg?raw';
+import lockKeyIcon from '../assets/lock-key.svg?raw';
+import IconText from './IconText.astro';
+---
+
+<section class="iconTexts container">
+	<IconText icon={calendarCheckIcon} text="Ponad 10 lat doświadczenia" color="var(--logo-theme-color)" />
+	<IconText icon={buildingsIcon} text="Rozwiązania dla domu i biznesu" color="var(--logo-theme-color)" />
+	<IconText icon={gearIcon} text="Szybka i profesjonalna instalacja" color="var(--logo-theme-color)" />
+	<IconText icon={lockKeyIcon} text="Bezpieczeństwo i niezawodność sytemów" color="var(--logo-theme-color)" />
+	<IconText icon={chatsCircleIcon} text="Wsparcie techniczne i doradztwo" color="var(--logo-theme-color)" />
+	<IconText icon={globeIcon} text="Stabilne i sprawdzone rozwiązania sieciowe" color="var(--logo-theme-color)" />
+</section>
+
+<style>
+	section {
+		margin-top: 24px;
+	}
+	.iconTexts {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		justify-items: flex-start;
+		gap: 12px;
+	}
+
+	@media (max-width: 870px) {
+		.iconTexts {
+			grid-template-columns: repeat(2, 1fr);
+			gap: 6px;
+		}
+	}
+
+	@media (max-width: 575px) {
+		.iconTexts {
+			grid-template-columns: repeat(1, 1fr);
+			gap: 6px;
+		}
+	}
+</style>
