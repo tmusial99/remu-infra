@@ -3,6 +3,8 @@ package main
 import (
 	"net/http"
 	"strconv"
+	"strings"
+	"sync"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -12,6 +14,9 @@ import (
 )
 
 var (
+	registry = prometheus.NewRegistry()
+	once     sync.Once
+
 	httpRequestsTotal = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Name: "http_requests_total",
@@ -35,10 +40,24 @@ var (
 	)
 )
 
-func init() {
-	// Rejestracja metryk
-	prometheus.MustRegister(httpRequestsTotal, httpRequestDuration, httpInprogress)
-	collectors.NewGoCollector()
+func initMetrics() {
+	once.Do(func() {
+		registry.MustRegister(
+			collectors.NewGoCollector(),
+			collectors.NewProcessCollector(collectors.ProcessCollectorOpts{}),
+		)
+		registry.MustRegister(httpRequestsTotal, httpRequestDuration, httpInprogress)
+	})
+}
+
+func sanitizeMethod(m string) string {
+	m = strings.ToUpper(m)
+	switch m {
+	case "GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS":
+		return m
+	default:
+		return "OTHER"
+	}
 }
 
 func metricsMiddleware() fiber.Handler {
@@ -48,21 +67,25 @@ func metricsMiddleware() fiber.Handler {
 
 		err := c.Next()
 
-		duration := time.Since(start).Seconds()
 		route := c.Route().Path
+		if route == "" || route == "*" {
+			route = c.Path()
+		}
+		method := sanitizeMethod(c.Method())
 		code := strconv.Itoa(c.Response().StatusCode())
-
-		httpRequestsTotal.WithLabelValues(c.Method(), code, route).Inc()
-		httpRequestDuration.WithLabelValues(c.Method(), route).Observe(duration)
+		httpRequestsTotal.WithLabelValues(method, code, route).Inc()
+		httpRequestDuration.WithLabelValues(method, route).Observe(time.Since(start).Seconds())
 
 		httpInprogress.Dec()
-
 		return err
 	}
-	
 }
 
 func runMetricsServer() {
-	http.Handle("/metrics", promhttp.Handler())
-	http.ListenAndServe(":3001", nil)
+	mh := promhttp.HandlerFor(registry, promhttp.HandlerOpts{
+		EnableOpenMetrics: true,
+	})
+	mux := http.NewServeMux()
+	mux.Handle("/metrics", mh)
+	_ = http.ListenAndServe(":3001", mux)
 }

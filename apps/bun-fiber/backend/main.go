@@ -7,6 +7,7 @@ import (
 
 func main() {
 	config := getConfig()
+	initMetrics()
 
 	app := fiber.New(fiber.Config{
 		ErrorHandler: customErrorHandler,
