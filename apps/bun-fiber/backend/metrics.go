@@ -22,7 +22,7 @@ var (
 			Name: "http_requests_total",
 			Help: "Total number of HTTP requests",
 		},
-		[]string{"method", "code", "route"},
+		[]string{"host", "method", "code", "route"},
 	)
 	httpRequestDuration = prometheus.NewHistogramVec(
 		prometheus.HistogramOpts{
@@ -30,7 +30,7 @@ var (
 			Help:    "Duration of HTTP requests in seconds",
 			Buckets: prometheus.DefBuckets,
 		},
-		[]string{"method", "route"},
+		[]string{"host", "method", "route"},
 	)
 	httpInprogress = prometheus.NewGauge(
 		prometheus.GaugeOpts{
@@ -67,14 +67,12 @@ func metricsMiddleware() fiber.Handler {
 
 		err := c.Next()
 
-		route := c.Route().Path
-		if route == "" || route == "*" {
-			route = c.Path()
-		}
+		host := c.Hostname()
+		path := c.Path()
 		method := sanitizeMethod(c.Method())
 		code := strconv.Itoa(c.Response().StatusCode())
-		httpRequestsTotal.WithLabelValues(method, code, route).Inc()
-		httpRequestDuration.WithLabelValues(method, route).Observe(time.Since(start).Seconds())
+		httpRequestsTotal.WithLabelValues(host, method, code, path).Inc()
+		httpRequestDuration.WithLabelValues(host, method, path).Observe(time.Since(start).Seconds())
 
 		httpInprogress.Dec()
 		return err
