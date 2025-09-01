@@ -34,6 +34,7 @@ func safeHeadersMiddleware() fiber.Handler {
 			"https://maps.googleapis.com",
 			"https://maps.gstatic.com",
 			"https://app.reviewconnect.me",
+			"https://static.cloudflareinsights.com",
 		}
 		styleHosts := []string{
 			"https://fonts.googleapis.com",
