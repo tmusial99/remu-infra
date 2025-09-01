@@ -9,7 +9,7 @@ COPY frontend/ .
 RUN bun run build
 
 # --- Backend builder ---
-FROM golang:1.24.6-alpine AS backend-builder
+FROM golang:1.25.0-alpine AS backend-builder
 WORKDIR /app
 
 COPY backend/go.mod backend/go.sum ./

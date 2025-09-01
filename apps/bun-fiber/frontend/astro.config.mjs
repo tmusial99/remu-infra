@@ -15,6 +15,7 @@ export default defineConfig({
 	srcDir: SITE_PATH,
 	publicDir: `${SITE_PATH}/public`,
 	outDir: `dist/${SITE}`,
+
 	vite: {
 		resolve: {
 			alias: {
@@ -22,6 +23,7 @@ export default defineConfig({
 			},
 		},
 	},
+
 	server: {
 		allowedHosts: ['remu'],
 	},

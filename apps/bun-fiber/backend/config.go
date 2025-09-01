@@ -7,17 +7,17 @@ type DomainConfig struct {
 }
 
 type ServerConfig struct {
-	Port               	string         	`json:"port"`
-	LocalhostTestDomain string        	`json:"localhost_test_domain"`
-	NoCacheExtensions	[]string 		`json:"exts_to_cache"`
-	Domains            	[]DomainConfig 	`json:"domains"`
+	Port                string         `json:"port"`
+	LocalhostTestDomain string         `json:"localhost_test_domain"`
+	NoCacheExtensions   []string       `json:"exts_to_cache"`
+	Domains             []DomainConfig `json:"domains"`
 }
 
 func getConfig() *ServerConfig {
 	return &ServerConfig{
-		Port:               ":3000",
-		LocalhostTestDomain: "tmdev.pl",
-		NoCacheExtensions: []string{".html"},
+		Port:                ":3000",
+		LocalhostTestDomain: "novi-tech.net",
+		NoCacheExtensions:   []string{".html"},
 		Domains: []DomainConfig{
 			{
 				Host:       "tmdev.pl",

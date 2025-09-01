@@ -1,1 +1,4 @@
 *-secret.yaml
+tmp
+apps/bun-fiber/backend/public
+.DS_Store

@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/utils"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/collectors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -20,23 +21,18 @@ var (
 	httpRequestsTotal = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Name: "http_requests_total",
-			Help: "Total number of HTTP requests",
+			Help: "Total number of HTTP requests.",
 		},
 		[]string{"host", "method", "code", "route"},
 	)
+
 	httpRequestDuration = prometheus.NewHistogramVec(
 		prometheus.HistogramOpts{
 			Name:    "http_request_duration_seconds",
-			Help:    "Duration of HTTP requests in seconds",
+			Help:    "HTTP request duration in seconds.",
 			Buckets: prometheus.DefBuckets,
 		},
 		[]string{"host", "method", "route"},
-	)
-	httpInprogress = prometheus.NewGauge(
-		prometheus.GaugeOpts{
-			Name: "http_inprogress_requests",
-			Help: "Number of in-progress HTTP requests",
-		},
 	)
 )
 
@@ -45,45 +41,72 @@ func initMetrics() {
 		registry.MustRegister(
 			collectors.NewGoCollector(),
 			collectors.NewProcessCollector(collectors.ProcessCollectorOpts{}),
+			httpRequestsTotal,
+			httpRequestDuration,
 		)
-		registry.MustRegister(httpRequestsTotal, httpRequestDuration, httpInprogress)
 	})
 }
 
-func sanitizeMethod(m string) string {
-	m = strings.ToUpper(m)
-	switch m {
-	case "GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS":
-		return m
-	default:
-		return "OTHER"
+// labels: "<html>", "<static>", "<spa fallback>", "<404>", or raw API path
+func routeLabel(raw string, status int, isAPI, servedHTML, servedStatic, staticTry, servedSPA bool) string {
+	// reduce accidental variants
+	for strings.Contains(raw, "//") {
+		raw = strings.ReplaceAll(raw, "//", "/")
 	}
+	if isAPI {
+		return raw
+	}
+	if servedHTML {
+		return "<html>"
+	}
+	if servedStatic || staticTry {
+		return "<static>"
+	}
+	if servedSPA {
+		return "<spa fallback>"
+	}
+	if status == http.StatusNotFound {
+		return "<404>"
+	}
+	return raw
 }
 
 func metricsMiddleware() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		start := time.Now()
-		httpInprogress.Inc()
+
+		// Snapshot BEFORE Next(); copy to avoid Fiber zero-alloc reuse.
+		host := utils.CopyString(strings.ToLower(c.Hostname()))
+		if host == "" {
+			host = "unknown"
+		}
+		method := utils.CopyString(strings.ToUpper(c.Method()))
+		rawPath := utils.CopyString(c.Path())
 
 		err := c.Next()
 
-		host := c.Hostname()
-		path := c.Path()
-		method := sanitizeMethod(c.Method())
-		code := strconv.Itoa(c.Response().StatusCode())
-		httpRequestsTotal.WithLabelValues(host, method, code, path).Inc()
-		httpRequestDuration.WithLabelValues(host, method, path).Observe(time.Since(start).Seconds())
+		code := c.Response().StatusCode()
+		isAPI, _ := c.Locals(locIsAPI).(bool)
+		servedStatic, _ := c.Locals(locServedStatic).(bool)
+		servedHTML, _ := c.Locals(locServedHTML).(bool)
+		staticTry, _ := c.Locals(locStaticTry).(bool)
+		servedSPA, _ := c.Locals(locSPA).(bool)
 
-		httpInprogress.Dec()
+		route := routeLabel(rawPath, code, isAPI, servedHTML, servedStatic, staticTry, servedSPA)
+
+		httpRequestsTotal.WithLabelValues(host, method, strconv.Itoa(code), route).Inc()
+		httpRequestDuration.WithLabelValues(host, method, route).Observe(time.Since(start).Seconds())
+
 		return err
 	}
 }
 
 func runMetricsServer() {
-	mh := promhttp.HandlerFor(registry, promhttp.HandlerOpts{
+	handler := promhttp.HandlerFor(registry, promhttp.HandlerOpts{
 		EnableOpenMetrics: true,
+		ErrorHandling:     promhttp.ContinueOnError,
 	})
 	mux := http.NewServeMux()
-	mux.Handle("/metrics", mh)
+	mux.Handle("/metrics", handler)
 	_ = http.ListenAndServe(":3001", mux)
 }

@@ -1,26 +1,36 @@
 package main
 
 import (
+	"time"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/requestid"
 )
 
 func main() {
 	config := getConfig()
 	initMetrics()
+	go runMetricsServer()
 
 	app := fiber.New(fiber.Config{
 		ErrorHandler: customErrorHandler,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 15 * time.Second,
+		IdleTimeout:  60 * time.Second,
+		BodyLimit:    2 * 1024 * 1024,
 	})
 
-	// Logging middleware
-	app.Use(logger.New())
+	app.Use(requestid.New())
+	app.Use(logger.New(logger.Config{
+		Format: "${time} | ${host} | ${method} | ${status} | ${latency} | ${ip} | ${path} | id=${locals:requestid} |\n",
+	}))
+	app.Use(safeHeadersMiddleware())
 	app.Use(metricsMiddleware())
-	app.Use(staticFilesMiddleware(config))
-	go runMetricsServer()
 
 	// API group
 	api := app.Group("/api", apiAuthMiddleware(config))
+	app.Use(staticFilesMiddleware(config))
 
 	// API endpoints
 	api.Get("/hello", func(c *fiber.Ctx) error {
